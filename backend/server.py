@@ -1,13 +1,8 @@
-from flask import Flask, jsonify
+from flask import jsonify
 import requests
-import os
-import berserk
+
 import  utilfunctions
 
-app = Flask(__name__)
-apikey = os.environ['lichesskey']
-session = berserk.TokenSession(apikey)
-client = berserk.Client(session=session)
 data = utilfunctions.utils()
 
 
