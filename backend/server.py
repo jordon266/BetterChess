@@ -1,52 +1,64 @@
+from flask import Flask
 from flask import jsonify
-import requests
+import requesthandler
+import Constants
+# import  utilfunctions
+app = Flask(__name__)
+api = requesthandler.APIHandler()
 
-import  utilfunctions
-
-data = utilfunctions.utils()
-
-
-@app.route('/') 
+@app.route('/mygames') 
 def home():
-    # try:
-    #     return data.getallgames()
-    # except requests.exceptions.RequestException as e:
-    #     return jsonify({"error":str(e)})
-    return  "Test"
+    try:
+        api_params = {'opening':'true'}
+        return api.getallgamesbyuser(Constants.UNAME,api_params)
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error":str(e)})
 
-@app.route('/myblitzgames')
-def myblitzgames():
-    # try:   
-    #     return data.getgamesbyspeed('blitz')
-    # except requests.exceptions.RequestException as e:
-    return jsonify({"error":str(e)})
+@app.route('/mygames/blitz')
+def myblitzgames(): 
+    try:
+        api_params = {'opening':'true','perfType':'rapid'}
+        return api.getallgamesbyuser(Constants.UNAME,api_params)
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error":str(e)})
 
-@app.route('/myrapidgames')
+@app.route('/mygames/rapid')
 def myrapidgames():
-    # try:    
-    #     return data.getgamesbyspeed('rapid')
-    # except requests.exceptions.RequestException as e:
-    return jsonify({"error":str(e)})
+    try:
+        api_params = {'opening':'true','perfType':'rapid'}
+        return api.getallgamesbyuser(Constants.UNAME,api_params)
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error":str(e)})
 
-@app.route('/mywhitegames')
+@app.route('/mygames/white')
 def mywhitegames():
-    # try:    
-    #     return data.getgamesbycolor('white','titledKing23')
-    # except requests.exceptions.RequestException as e:
-    return jsonify({"error":str(e)})
+    try:
+        api_params = {'opening':'true','color':'white'}
+        return api.getallgamesbyuser(Constants.UNAME,api_params)
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error":str(e)})
     
-@app.route('/myblackgames')
+@app.route('/mygames/black')
 def myblackgames():
-    # try:    
-    #     return data.getgamesbycolor('black' ,'titledKing23')
-    # except requests.exceptions.RequestException as e:
-    return jsonify({"error":str(e)})
+    try:
+        api_params = {'opening':'true','color':'black'}
+        return api.getallgamesbyuser(Constants.UNAME,api_params)
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error":str(e)})
 
-@app.route('/allwins')
+@app.route('/mygames/datedesc')
 def mywins():
-    # try:    
-    #     return data.getgamesbycolor('black' ,'titledKing23')
-    # except requests.exceptions.RequestException as e:
-    return jsonify({"error":str(e)})
+    try:
+        api_params = {'opening':'true', 'evals':'true','sort':'dateDesc'}
+        return api.getallgamesbyuser(Constants.UNAME,api_params)
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error":str(e)})
 
+@app.route('/mygames/dateasc')
+def mylosses():
+    try:
+        api_params = {'opening':'true', 'evals':'true','sort':'dateAsc'}
+        return api.getallgamesbyuser(Constants.UNAME,api_params)
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error":str(e)})
 app.run(port=5000)
