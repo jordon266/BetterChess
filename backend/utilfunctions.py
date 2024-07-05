@@ -1,3 +1,8 @@
-token ='lip_88V9PY5fawgJg6mBIVeM'
-uname ='titledKing23'
-password ='rT+Chv9BLpz)GRP'
+import requesthandler
+
+def getidfromgames(listgames):
+    idlist = []
+    for game in listgames:
+        if 'analysis' not in game:
+            idlist.append(game['id'])
+    return idlist
