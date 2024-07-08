@@ -1,6 +1,4 @@
 import requests
-import json
-import time
 import Constants
 
 class APIHandler:    
@@ -8,10 +6,8 @@ class APIHandler:
         self.headers  = {'Accept': 'application/x-ndjson','Authorization': f'Bearer {Constants.TOKEN}'}       
     def getallgamesbyuser(self,username,params):
         fullurl = Constants.URL+Constants.MAIN_API_ENDPOINT+Constants.GAMESBYUSER_ENDPOINT+username     
-        response = requests.request("GET", url=fullurl, headers=self.headers,params=params)
-        games= [json.loads(line, object_hook=dict) for line in response.text.splitlines()]
-        return games
-    
+        return requests.request("GET", url=fullurl, headers=self.headers,params=params,stream=True)
+
 class SessionHandler:
     def __init__(self):
         self.s = requests.Session() 
@@ -23,21 +19,3 @@ class SessionHandler:
     def request_analysis(self,id):  
         request_analysis_url = f'https://lichess.org/{id}/request-analysis'
         return self.s.post(request_analysis_url, headers=Constants.SESSION_HEADER)
-        
-# Rewritten Test
-
-# params = {'since':'true','until':'true', 'color':'true', 'analysed':'true', 'vs':'true','rated':'true','moves':'true','literate':'true','sort':'true'}
-api_params = {'opening':'true', 'evals':'true'}
-api = APIHandler()
-gameslist = api.getallgamesbyuser(Constants.UNAME,api_params)
-# ids = api.getidfromgames(gameslist)
-# print(ids)
-# s = SessionHandler(Constants.UNAME,Constants.PWD)
-# print (s.login())
-# num = 1
-# for id in ids:
-#     print(num)
-#     print(s.request_analysis(id))
-#     time.sleep(30)
-#     num +=1 
-# may move this to util functions
