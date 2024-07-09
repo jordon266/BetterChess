@@ -11,7 +11,7 @@ api = requesthandler.APIHandler()
 def home():
     try:
         api_params = {'opening':'true'}
-        return Response(api.getallgamesbyuser(Constants.UNAME,api_params).iter_lines(), mimetype='application/json')
+        return Response(api.getallgamesbyuser(Constants.UNAME,api_params).iter_lines(), mimetype='application/x-ndjson')
     except requesthandler.requests.exceptions.RequestException as e:
         return jsonify({"error":str(e)})
 

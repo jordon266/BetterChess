@@ -1,46 +1,32 @@
 import logo from './logo.svg';
 import './App.css';
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
+
 function App() {
-// got from chess.com
-const readStream = processLine => response => {
-  const stream = response.body.getReader();
-  const matcher = /\r?\n/;
-  const decoder = new TextDecoder();
-  let buf = '';
-
-  const loop = () =>
-    stream.read().then(({ done, value }) => {
-      if (done) {
-        if (buf.length > 0) processLine(JSON.parse(buf));
-      } else {
-        const chunk = decoder.decode(value, {
-          stream: true
-        });
-        buf += chunk;
-
-        const parts = buf.split(matcher);
-        buf = parts.pop();
-        for (const i of parts.filter(p => p)) processLine(JSON.parse(i));
-        return loop();
-      }
+  // got from chess.com
+  const [numOfGames, setnumOfGames] = useState(0);
+  async function test(res) {
+    const reader = res.body.getReader();
+    console.log(res.body)
+    const decoder = new TextDecoder();
+    let num = 0
+    reader.read().then(function processChunk({ done, value }) {
+      if (done) return;
+      const chunk = decoder.decode(value, { stream: true });
+      num+=1
+      console.log(`Received chunk: ${chunk}`);
+      console.log(num)
+      // Process the chunk here
+      return reader.read().then(processChunk);
     });
-
-  return loop();
-}
-  const [currentTime, setCurrentTime] = useState(0);
+  }
 
   useEffect(() => {
-    fetch('/mygames')
-      .then(response => console.log(response.text()))
-      // .then(data => setGames(data));
-  }, []);
-
-  const processGame = game => {
-    // Process each game object here
-    console.log(game)
-    console.log('\n')
-  };
+    const apiUrl = '/mygames';
+    fetch(apiUrl)
+.then(response => test(response))
+  .catch(error => console.error(error));
+})
 
 
   return (
