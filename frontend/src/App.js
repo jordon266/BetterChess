@@ -1,47 +1,54 @@
 import logo from './logo.svg';
 import './App.css';
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
+
+
 function App() {
-// got from chess.com
-const readStream = processLine => response => {
-  const stream = response.body.getReader();
-  const matcher = /\r?\n/;
-  const decoder = new TextDecoder();
-  let buf = '';
-
-  const loop = () =>
-    stream.read().then(({ done, value }) => {
-      if (done) {
-        if (buf.length > 0) processLine(JSON.parse(buf));
-      } else {
-        const chunk = decoder.decode(value, {
-          stream: true
-        });
-        buf += chunk;
-
-        const parts = buf.split(matcher);
-        buf = parts.pop();
-        for (const i of parts.filter(p => p)) processLine(JSON.parse(i));
-        return loop();
+  // got from chess.com
+  const [numOfGames, setnumOfGames] = useState(0);
+ let games = []
+ async function test(response) {
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder("utf-8");
+  const lineMatcher = /\n/;
+  let chunkCount = 0;
+  let games = [];
+  new ReadableStream().getReader().read()
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value, { stream: true });
+      // chunkCount++;
+      let parts = chunk.split(lineMatcher)
+      if (chunk.includes('}{')){
+         let chunk_1 = chunk.replaceAll(/}{/g,"},,{")
+         parts = chunk_1.split(/,,/)
+        console.log('number of parts:' + parts.length)
       }
-    });
-
-  return loop();
+      for (let part of parts){
+        try {
+         games.push(JSON.parse(part))
+         console.log(games.length)
+        } catch (error) {
+          console.log(error)
+        }
+      }  
+    }
+  } catch (error) {
+    console.error('Stream processing error:', error);
+  }
+  return games;
 }
-  const [currentTime, setCurrentTime] = useState(0);
 
+
+  
   useEffect(() => {
-    fetch('/mygames')
-      .then(response => console.log(response.text()))
-      // .then(data => setGames(data));
-  }, []);
-
-  const processGame = game => {
-    // Process each game object here
-    console.log(game)
-    console.log('\n')
-  };
-
+    const apiUrl = '/mygames';
+    fetch(apiUrl)
+.then(response => test(response)).then(console.log(games)) // console.log not working gotta see out fetch and then work
+  .catch(error => console.error(error));
+});
 
   return (
     <div className="App">
@@ -58,6 +65,7 @@ const readStream = processLine => response => {
         >
           Learn React
         </a>
+        Number of Games
       </header>
     </div>
   );
