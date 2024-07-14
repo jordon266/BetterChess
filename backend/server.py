@@ -3,6 +3,7 @@ from flask import jsonify
 from flask import Response
 import requesthandler
 import Constants
+import time
 # import  utilfunctions
 app = Flask(__name__)
 api = requesthandler.APIHandler()
@@ -10,8 +11,9 @@ api = requesthandler.APIHandler()
 @app.route('/mygames') 
 def home():
     try:
-        api_params = {'opening':'true'}
-        return Response(api.getallgamesbyuser(Constants.UNAME,api_params).iter_lines(), mimetype='application/x-ndjson')
+        # api_params = {'opening':'true'}
+        api_params = {'moves':'false'}
+        return Response(api.getallgamesbyuser(Constants.UNAME,api_params), mimetype='application/x-ndjson')
     except requesthandler.requests.exceptions.RequestException as e:
         return jsonify({"error":str(e)})
 
