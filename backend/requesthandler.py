@@ -6,7 +6,7 @@ class APIHandler:
         self.headers  = {'Accept': 'application/x-ndjson','Authorization': f'Bearer {Constants.TOKEN}'}       
     def getallgamesbyuser(self,username,params):
         fullurl = Constants.URL+Constants.MAIN_API_ENDPOINT+Constants.GAMESBYUSER_ENDPOINT+username     
-        return requests.request("GET", url=fullurl, headers=self.headers,params=params,stream=True).iter_lines( )
+        return requests.request("GET", url=fullurl, headers=self.headers,params=params,stream=True).iter_lines()
 
 class SessionHandler:
     def __init__(self):
