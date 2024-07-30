@@ -33,21 +33,23 @@ def home():
 #     except requests.exceptions.RequestException as e:
 #         return jsonify({"error":str(e)})
 
-# @app.route('/mygames/white')
-# def mywhitegames():
-#     try:
-#         api_params = {'opening':'true','color':'white'}
-#         return api.getallgamesbyuser(Constants.UNAME,api_params)
-#     except requests.exceptions.RequestException as e:
-#         return jsonify({"error":str(e)})
+@app.route('/mygames/white')
+def mywhitegames():
+    try:
+        # api_params = {'opening':'true'}
+        api_params = {'color':'white'}
+        return Response(api.getallgamesbyuser(Constants.UNAME,api_params), mimetype='application/x-ndjson')
+    except requesthandler.requests.exceptions.RequestException as e:
+        return jsonify({"error":str(e)})
     
-# @app.route('/mygames/black')
-# def myblackgames():
-#     try:
-#         api_params = {'opening':'true','color':'black'}
-#         return api.getallgamesbyuser(Constants.UNAME,api_params)
-#     except requests.exceptions.RequestException as e:
-#         return jsonify({"error":str(e)})
+@app.route('/mygames/black')
+def myblackgames():
+    try:
+        # api_params = {'opening':'true'}
+        api_params = {'color':'black'}
+        return Response(api.getallgamesbyuser(Constants.UNAME,api_params), mimetype='application/x-ndjson')
+    except requesthandler.requests.exceptions.RequestException as e:
+        return jsonify({"error":str(e)})
 
 # @app.route('/mygames/datedesc')
 # def mywins():
